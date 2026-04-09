@@ -12,6 +12,21 @@ const navLinks = [
   { label: 'Code',     href: '/code' },
 ]
 
+function nameToColor(name: string) {
+  const colors = [
+    "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+    "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
+    "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
+    "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
+    "bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300",
+    "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
+    "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
+    "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300",
+  ]
+  const index = name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % colors.length
+  return colors[index]
+}
+
 export default function Topbar() {
   const pathname = usePathname()
   const { data: session } = useSession()
@@ -50,9 +65,11 @@ export default function Topbar() {
         >
           Log out
         </button>
-        <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xs font-medium text-blue-700 dark:text-blue-300">
-          {initials}
-        </div>
+        <Link href="/settings">
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity ${nameToColor(session?.user?.name ?? "")}`}>
+                {initials}
+            </div>
+        </Link>
       </div>
     </nav>
   )
