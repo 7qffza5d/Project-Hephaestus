@@ -41,7 +41,3 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
-
-# feel like this would clutter the repo
-CLAUDE.md
-AGENTS.md
