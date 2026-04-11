@@ -26,6 +26,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Changed]
 - app/layout.tsx cleaned up to use Auth.js v5 patterns
-
-### [Removed]
-- Self-registration — accounts are pre-seeded by admin

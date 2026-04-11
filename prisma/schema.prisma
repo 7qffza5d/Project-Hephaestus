@@ -36,6 +36,7 @@ model User {
   passwordHash String
   role         Role      @default(STUDENT)
   createdAt    DateTime  @default(now())
+  completions HomeworkCompletion[]
 
   posts        Post[]
   snippets     CodeSnippet[]
@@ -76,9 +77,9 @@ model HomeworkItem {
   title      String
   subject    String
   dueDate    DateTime
-  classWide  Boolean  @default(false)
-  done       Boolean  @default(false)
+  resourceUrl String?
   createdAt  DateTime @default(now())
+  completions HomeworkCompletion[]
 }
 
 model Event {
@@ -124,4 +125,15 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model HomeworkCompletion {
+  userId         String
+  homeworkItemId String
+  completedAt    DateTime @default(now())
+
+  user     User         @relation(fields: [userId], references: [id])
+  homework HomeworkItem @relation(fields: [homeworkItemId], references: [id])
+
+  @@id([userId, homeworkItemId])
 }
