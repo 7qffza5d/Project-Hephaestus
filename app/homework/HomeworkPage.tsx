@@ -26,6 +26,7 @@ export default function HomeworkPage({ userId, role }: { userId: string; role: s
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<HWItem | null>(null);
   const isAdmin = role === "ADMIN";
+  console.log("role = ", role);
 
   async function load() {
     const res = await fetch("/api/homework");
