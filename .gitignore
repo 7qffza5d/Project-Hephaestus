@@ -44,3 +44,5 @@ next-env.d.ts
 
 #passwords
 prisma/seed.ts
+.vercel
+.env*.local
