@@ -5,8 +5,9 @@ import {prisma} from "@/lib/prisma";
 
 export async function POST(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -16,7 +17,7 @@ export async function POST(
     where: {
       userId_homeworkItemId: {
         userId: session.user.id,
-        homeworkItemId: params.id,
+        homeworkItemId: id,
       },
     },
   });
@@ -26,7 +27,7 @@ export async function POST(
       where: {
         userId_homeworkItemId: {
           userId: session.user.id,
-          homeworkItemId: params.id,
+          homeworkItemId: id,
         },
       },
     });
@@ -35,7 +36,7 @@ export async function POST(
     await prisma.homeworkCompletion.create({
       data: {
         userId: session.user.id,
-        homeworkItemId: params.id,
+        homeworkItemId: id,
       },
     });
     return NextResponse.json({ done: true });
