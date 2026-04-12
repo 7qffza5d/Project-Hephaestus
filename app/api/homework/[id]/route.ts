@@ -13,7 +13,7 @@ export async function PATCH(
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const { title, subject, dueDate, resourceUrl } = await req.json();
+    const { title, subject, dueDate, fileItemId } = await req.json();
 
     const item = await prisma.homeworkItem.update({
         where: { id: id },
@@ -21,7 +21,7 @@ export async function PATCH(
             ...(title && { title }),
             ...(subject && { subject }),
             ...(dueDate && { dueDate: new Date(dueDate) }),
-            ...(resourceUrl !== undefined && { resourceUrl }),
+            ...(fileItemId !== undefined && { fileItemId }),
         },
     });
 

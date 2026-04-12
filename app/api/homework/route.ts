@@ -37,7 +37,6 @@ export async function POST(req: Request) {
       title,
       subject,
       dueDate: new Date(dueDate),
-      resourceUrl: resourceUrl ?? null,
       userId: session.user.id,
     },
   });
