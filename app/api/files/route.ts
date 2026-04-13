@@ -40,7 +40,9 @@ export async function POST(req: Request) {
   let blob;
   try {
     blob = await put(file.name, file, { access: "public" });
-  } catch {
+    console.log("Blob upload succeeded:", blob.url);
+  } catch (e) {
+    console.error("Blob upload failed:", e);
     return NextResponse.json({ error: "Storage upload failed" }, { status: 500 });
   }
 
@@ -55,8 +57,10 @@ export async function POST(req: Request) {
         mimeType: file.type,
       },
     });
+    console.log("DB write succeeded:", fileItem.id);
     return NextResponse.json(fileItem, { status: 201 });
-  } catch {
+  } catch (e){
+    console.error("DB write failed:", e);
     await del(blob.url);
     return NextResponse.json({ error: "Database write failed" }, { status: 500 });
   }
