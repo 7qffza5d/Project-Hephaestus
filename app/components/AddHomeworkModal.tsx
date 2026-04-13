@@ -7,7 +7,17 @@ type HomeworkFormData = {
   title: string;
   subject: string;
   dueDate: string;
-  resourceUrl: string;
+  fileItemId: string;
+};
+
+type Folder = {
+  id: string;
+  name: string;
+};
+
+type FileItem = {
+  id: string;
+  name: string;
 };
 
 type Props = {
@@ -19,10 +29,23 @@ type Props = {
 
 export default function AddHomeworkModal({ open, initial, onClose, onSave }: Props) {
   const [form, setForm] = useState<HomeworkFormData>({
-    title: "", subject: "", dueDate: "", resourceUrl: "",
+    title: "", subject: "", dueDate: "", fileItemId: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [folders, setFolders] = useState<Folder[]>([]);
+  const [selectedFolderId, setSelectedFolderId] = useState("");
+  const [files, setFiles] = useState<FileItem[]>([]);
+
+  useEffect(() => {
+    if (open) fetchFolders();
+  }, [open]);
+
+  useEffect(() => {
+    if (selectedFolderId) fetchFiles(selectedFolderId);
+    else setFiles([]);
+  }, [selectedFolderId]);
 
   useEffect(() => {
     if (initial) {
@@ -30,13 +53,27 @@ export default function AddHomeworkModal({ open, initial, onClose, onSave }: Pro
         title: initial.title,
         subject: initial.subject,
         dueDate: initial.dueDate.slice(0, 10),
-        resourceUrl: initial.resourceUrl ?? "",
+        fileItemId: initial.fileItemId ?? "",
       });
     } else {
-      setForm({ title: "", subject: "", dueDate: "", resourceUrl: "" });
+      setForm({ title: "", subject: "", dueDate: "", fileItemId: "" });
+      setSelectedFolderId("");
+      setFiles([]);
     }
     setError("");
   }, [initial, open]);
+
+  async function fetchFolders() {
+    const res = await fetch("/api/folders");
+    const data = await res.json();
+    setFolders(data);
+  }
+
+  async function fetchFiles(folderId: string) {
+    const res = await fetch(`/api/files?folderId=${folderId}`);
+    const data = await res.json();
+    setFiles(data);
+  }
 
   if (!open) return null;
 
@@ -53,7 +90,7 @@ export default function AddHomeworkModal({ open, initial, onClose, onSave }: Pro
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...form,
-        resourceUrl: form.resourceUrl || null,
+        fileItemId: form.fileItemId || null,
       }),
     });
     setLoading(false);
@@ -93,13 +130,35 @@ export default function AddHomeworkModal({ open, initial, onClose, onSave }: Pro
             onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
             className="w-full px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400"
           />
-          <input
-            type="url"
-            placeholder="Resource URL (optional)"
-            value={form.resourceUrl}
-            onChange={e => setForm(f => ({ ...f, resourceUrl: e.target.value }))}
-            className="w-full px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400"
-          />
+
+          {/* File picker */}
+          <div className="flex flex-col gap-2">
+            <select
+              value={selectedFolderId}
+              onChange={e => {
+                setSelectedFolderId(e.target.value);
+                setForm(f => ({ ...f, fileItemId: "" }));
+              }}
+              className="w-full px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+            >
+              <option value="">Attach a file — pick folder (optional)</option>
+              {folders.map(folder => (
+                <option key={folder.id} value={folder.id}>{folder.name}</option>
+              ))}
+            </select>
+            {selectedFolderId && (
+              <select
+                value={form.fileItemId}
+                onChange={e => setForm(f => ({ ...f, fileItemId: e.target.value }))}
+                className="w-full px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+              >
+                <option value="">No file</option>
+                {files.map(file => (
+                  <option key={file.id} value={file.id}>{file.name}</option>
+                ))}
+              </select>
+            )}
+          </div>
         </div>
 
         {error && <p className="text-xs text-red-500 mt-2">{error}</p>}

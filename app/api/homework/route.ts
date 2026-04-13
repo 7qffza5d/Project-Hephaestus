@@ -1,7 +1,7 @@
 // app/api/homework/route.ts
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import {prisma} from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   const session = await auth();
@@ -15,6 +15,9 @@ export async function GET() {
       completions: {
         where: { userId: session.user.id },
       },
+      fileItem: {
+        select: { id: true, url: true, name: true },
+      },
     },
   });
 
@@ -27,7 +30,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { title, subject, dueDate, resourceUrl } = await req.json();
+  const { title, subject, dueDate, fileItemId } = await req.json();
   if (!title || !subject || !dueDate) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
@@ -38,6 +41,7 @@ export async function POST(req: Request) {
       subject,
       dueDate: new Date(dueDate),
       userId: session.user.id,
+      ...(fileItemId && { fileItemId }),
     },
   });
 
