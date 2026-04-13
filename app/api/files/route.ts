@@ -58,6 +58,7 @@ export async function POST(req: Request) {
       },
     });
     console.log("DB write succeeded:", fileItem.id);
+    
     return NextResponse.json(fileItem, { status: 201 });
   } catch (e){
     console.error("DB write failed:", e);
