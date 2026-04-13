@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.4
+
+### [Added]
+
+- File library at /vault — folder sidebar, file grid, upload, and delete
+- Folder model with freeform admin-created names and cascade delete
+- FileItem model storing Vercel Blob URL, size, and MIME type
+- POST /api/files — uploads PDF to Vercel Blob then writes DB record
+- DELETE /api/files/[id] — deletes from Blob first, then DB
+- POST /api/folders and DELETE /api/folders/[id]
+- Server-side PDF-only MIME type validation (HTTP 415 on rejection)
+- Orphan protection — blob deleted if DB write fails after upload
+- BLOB_READ_WRITE_TOKEN environment variable via Vercel Blob store
+- 
+### [Changed]
+
+- HomeworkItem.resourceUrl String? replaced by fileItemId String? FK to FileItem
+- AddHomeworkModal resource URL text input replaced by cascading folder/file picker
+- HomeworkItem component updated to render PDF link from fileItem relation
+- GET /api/homework now includes fileItem { id, url, name } in response
+
+### [Fixed]
+
+- Next.js 16: params in dynamic route handlers must be awaited (Promise<{id}>)
+- prisma.config.ts import changed from prisma/config to @prisma/config
+- DATABASE_URL migrated from localhost PostgreSQL to Neon cloud (pooled URL)
+- Vercel Blob store recreated as public — private store does not support public access mode
+
+### [Removed]
+
+- That one console log in HomeworkPage
+
 ## v0.3
 
 ### [Added]
