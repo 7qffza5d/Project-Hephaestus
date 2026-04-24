@@ -51,6 +51,7 @@ model Post {
   id          String     @id @default(uuid())
   author      User       @relation(fields: [authorId], references: [id])
   authorId    String
+  pseudonym   String?
   type        PostType
   title       String
   body        String
