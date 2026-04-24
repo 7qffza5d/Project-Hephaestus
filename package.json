@@ -15,15 +15,21 @@
     "@prisma/client": "^5.22.0",
     "@vercel/blob": "^2.3.3",
     "bcryptjs": "^3.0.3",
+    "katex": "^0.16.45",
     "next": "16.2.2",
     "next-auth": "^5.0.0-beta.30",
     "pg": "^8.20.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
+    "@types/katex": "^0.16.8",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
     "@types/react": "^19",

@@ -24,3 +24,46 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Markdown Preview */
+.markdown-preview h1 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
+.markdown-preview h2 { font-size: 1.25rem; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+.markdown-preview h3 { font-size: 1.125rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+.markdown-preview p  { margin-bottom: 0.75rem; line-height: 1.7; }
+.markdown-preview ul { list-style: disc inside; margin-bottom: 0.75rem; }
+.markdown-preview ol { list-style: decimal inside; margin-bottom: 0.75rem; }
+.markdown-preview li { margin-bottom: 0.25rem; }
+.markdown-preview blockquote {
+  border-left: 4px solid #6b7280;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #9ca3af;
+  margin: 0.75rem 0;
+}
+.markdown-preview a { color: #60a5fa; text-decoration: underline; }
+.markdown-preview a:hover { color: #93c5fd; }
+.markdown-preview hr { border-color: #4b5563; margin: 1.5rem 0; }
+
+/* Inline code */
+.markdown-preview :not(pre) > code {
+  background: #1f2937;
+  color: #f472b6;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+/* Fenced code blocks */
+.markdown-preview pre {
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  font-size: 0.875rem;
+}
+
+/* KaTeX block math */
+.markdown-preview .katex-display {
+  margin: 1rem 0;
+  overflow-x: auto;
+}
