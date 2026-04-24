@@ -29,10 +29,7 @@ export default function PostPage({ post, role, userId }: PostPageProps) {
     const [deleting, setDeleting] = useState(false);
     const isAdmin = role === "ADMIN";
     const isAuthor = post.author.id === userId;
-    const shareUrl =
-        post.shareToken
-            ? `${window.location.origin}/share/${post.shareToken}`
-            : null;
+    const shareUrl = post.shareToken ? `/share/${post.shareToken}` : null;
 
     async function handleDelete() {
         if (!confirm("Delete this post? This cannot be undone.")) return;
@@ -106,7 +103,7 @@ export default function PostPage({ post, role, userId }: PostPageProps) {
                             {shareUrl}
                         </a>
                         <button
-                            onClick={() => navigator.clipboard.writeText(shareUrl)}
+                            onClick={() => navigator.clipboard.writeText(window.location.origin + shareUrl)}
                             className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
                         >
                             Copy
