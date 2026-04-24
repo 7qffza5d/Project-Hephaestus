@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
   const shareToken =
     visibility === "SHARED" ? crypto.randomUUID() : undefined;
 
+    console.log("session.user.id:", session.user.id);
   try {
     const post = await prisma.post.create({
       data: {

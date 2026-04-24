@@ -60,9 +60,10 @@ export async function POST(req: Request) {
     console.log("DB write succeeded:", fileItem.id);
     
     return NextResponse.json(fileItem, { status: 201 });
-  } catch (e){
-    console.error("DB write failed:", e);
-    await del(blob.url);
-    return NextResponse.json({ error: "Database write failed" }, { status: 500 });
-  }
+  }  catch (e) {
+  console.error("Prisma error:", JSON.stringify(e, null, 2));
+  console.error("Prisma error message:", (e as any).message);
+  console.error("Prisma error code:", (e as any).code);
+  return NextResponse.json({ error: "Database error" }, { status: 500 });
+}
 }
