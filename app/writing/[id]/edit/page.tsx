@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import PostEditor from "@/app/components/PostEditor";
 
 export default async function Page({
@@ -12,18 +13,13 @@ export default async function Page({
 
   const { id } = await params;
 
-  const res = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/posts/${id}`,
-    { cache: "no-store" }
-  );
+  const post = await prisma.post.findUnique({
+    where: { id },
+    include: { author: { select: { id: true, name: true } } },
+  });
 
-  if (res.status === 404 || res.status === 403) notFound();
-  if (!res.ok) throw new Error("Failed to load post");
-
-  const post = await res.json();
-
-  // Only the author can reach the edit page
-  if (post.author.id !== session.user.id) notFound();
+  if (!post) notFound();
+  if (post.authorId !== session.user.id) notFound();
 
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col px-6 py-4">

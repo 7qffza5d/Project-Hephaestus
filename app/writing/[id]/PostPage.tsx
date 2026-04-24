@@ -14,7 +14,7 @@ interface Post {
     visibility: string;
     pseudonym: string | null;
     shareToken: string | null;
-    createdAt: string;
+    createdAt: Date | string;
     author: { id: string; name: string };
 }
 

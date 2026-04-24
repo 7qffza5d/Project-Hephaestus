@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import PostPage from "./PostPage";
 
 export default async function Page({
@@ -12,15 +13,18 @@ export default async function Page({
 
   const { id } = await params;
 
-  const res = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/posts/${id}`,
-    { cache: "no-store" }
-  );
+  const post = await prisma.post.findUnique({
+    where: { id },
+    include: { author: { select: { id: true, name: true } } },
+  });
 
-  if (res.status === 404 || res.status === 403) notFound();
-  if (!res.ok) throw new Error("Failed to load post");
+  if (!post) notFound();
 
-  const post = await res.json();
+  const isAuthor = post.authorId === session.user.id;
+  const isAdmin = session.user.role === "ADMIN";
+  const isVisible = post.visibility === "CLASS" || post.visibility === "SHARED";
+
+  if (!isAuthor && !isAdmin && !isVisible) notFound();
 
   return (
     <PostPage
